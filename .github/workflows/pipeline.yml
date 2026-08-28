@@ -1,0 +1,180 @@
+name: Pipeline V1 - Calidad y Despliegue
+
+# ---------------------------------------------------------
+# EVENTOS QUE ACTIVAN EL PIPELINE
+# ---------------------------------------------------------
+
+on:
+
+
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:  # Permite ejecutarlo manualmente
+  push:
+    branches: [ "main" ]
+
+
+# ---------------------------------------------------------
+# PERMISOS
+# ---------------------------------------------------------
+
+permissions:
+
+  contents: read
+
+  pages: write
+
+  id-token: write
+
+
+# ---------------------------------------------------------
+# JOBS
+# ---------------------------------------------------------
+
+jobs:
+
+
+  # =======================================================
+  # JOB 1
+  # PRUEBAS
+  # =======================================================
+
+  test:
+
+    name: Ejecutar pruebas
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+
+
+      # ---------------------------------------------------
+      # PASO 1
+      # Descargar código del repositorio
+      # ---------------------------------------------------
+
+      - name: Descargar código
+
+        uses: actions/checkout@v4
+
+
+      # ---------------------------------------------------
+      # PASO 2
+      # Instalar Node.js
+      # ---------------------------------------------------
+
+      - name: Configurar Node.js
+
+        uses: actions/setup-node@v4
+
+        with:
+
+          node-version: 22
+
+          cache: npm
+
+
+      # ---------------------------------------------------
+      # PASO 3
+      # Instalar dependencias
+      # ---------------------------------------------------
+
+      - name: Instalar dependencias
+
+        run: npm ci
+
+
+      # ---------------------------------------------------
+      # PASO 4
+      # Ejecutar pruebas
+      # ---------------------------------------------------
+
+      - name: Ejecutar pruebas automatizadas
+
+        run: npm test
+
+
+
+  # =======================================================
+  # JOB 2
+  # DESPLIEGUE
+  # =======================================================
+
+  deploy:
+
+    name: Desplegar aplicación
+
+
+    # IMPORTANTE:
+    # Deploy depende de Test.
+
+    needs: test
+
+
+    # No desplegamos los Pull Requests.
+    # Solamente desplegamos cuando el código llega a main.
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+
+    runs-on: ubuntu-latest
+
+
+    environment:
+
+      name: github-pages
+
+      url: ${{ steps.deployment.outputs.page_url }}
+
+
+    steps:
+
+
+      # ---------------------------------------------------
+      # PASO 1
+      # Descargar código
+      # ---------------------------------------------------
+
+      - name: Descargar código
+
+        uses: actions/checkout@v4
+
+
+      # ---------------------------------------------------
+      # PASO 2
+      # Configurar GitHub Pages
+      # ---------------------------------------------------
+
+      - name: Configurar GitHub Pages
+
+        uses: actions/configure-pages@v5
+
+
+      # ---------------------------------------------------
+      # PASO 3
+      # Preparar archivos para despliegue
+      # ---------------------------------------------------
+
+      - name: Preparar aplicación
+
+        uses: actions/upload-pages-artifact@v3
+
+        with:
+
+          path: "./public"
+
+
+      # ---------------------------------------------------
+      # PASO 4
+      # Desplegar
+      # ---------------------------------------------------
+
+      - name: Desplegar en GitHub Pages
+
+        id: deployment
+
+        uses: actions/deploy-pages@v4

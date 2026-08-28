@@ -1,0 +1,11 @@
+{
+  "name": "task-manager-pipeline",
+  "version": "1.0.0",
+  "description": "Práctica de CI/CD con GitHub Actions",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^30.0.0"
+  }
+}

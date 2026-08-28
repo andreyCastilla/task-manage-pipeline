@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Task Manager - CI/CD</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Task Manager</h1>
+    <p>Práctica de CI/CD con GitHub Actions</p>
+</header>
+
+<main>
+
+    <section class="card">
+
+        <h2>Nueva tarea</h2>
+
+        <form id="formTarea">
+
+            <input
+                    type="text"
+                    id="nombreTarea"
+                    placeholder="Escriba una tarea"
+                    autocomplete="off"
+            >
+
+            <button type="submit">
+                Agregar
+            </button>
+
+        </form>
+
+        <p id="mensaje"></p>
+
+    </section>
+
+
+    <section class="estadisticas">
+
+        <div class="estadistica">
+            <span id="totalTareas">0</span>
+            <p>Total</p>
+        </div>
+
+        <div class="estadistica">
+            <span id="tareasPendientes">0</span>
+            <p>Pendientes</p>
+        </div>
+
+        <div class="estadistica">
+            <span id="tareasCompletadas">0</span>
+            <p>Completadas</p>
+        </div>
+
+    </section>
+
+
+    <section class="card">
+
+        <h2>Lista de tareas</h2>
+
+        <ul id="listaTareas"></ul>
+
+    </section>
+
+</main>
+
+
+<footer>
+    <p>
+        Nuevas Tendencias de Software |
+        Pipeline CI/CD
+    </p>
+</footer>
+
+
+<script src="js/tareas.js"></script>
+
+</body>
+
+</html>
