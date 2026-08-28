@@ -6,11 +6,13 @@
  */
 function validarTarea(nombre) {
 
+    /** 
     if (typeof nombre !== "string") {
         return false;
     }
 
     return nombre.trim().length >= 3;
+    **/
 }
 
 
